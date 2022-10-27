@@ -1,0 +1,36 @@
+---
+title: "BTS Lab Journal"
+author: "Kelly Mistry"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### 10/27/2022
+
+#### Notes from 10/26 meeting with Sarah and Staci
+
+-   Nothing really needs to be done by the Guam trip (good)
+
+-   first step, build a size-structured population model, with 4 size classes (small, medium, large, super large), and associated survival and reproductive rates
+
+    -   On this population, do iterations of one-time removal, then estimate and keep doing this until a rule (N \> 10, for example) is broken (so, once the population goes below 10, it would stop)
+
+    -   Try different starting population sizes to see if there's a big difference in the results
+
+    -   Quarterly time step (3 months)
+
+    -   Could have a density dependence function as part of the growth and reproductive rates
+
+-   Start in R, may need to move to JAGS later
+
+-   The adaptive part might be to test for management control effectiveness, and adjust based on that
+
+-   Try to have a full basic model by the end of November
+
+-   January and April 15th are the quarterly report deadlines (Staci will send me examples, it isn't hard)
+
+    -   Ask Sarah R. for remaining budget numbers with at least a week of leeway for her to get back to me
