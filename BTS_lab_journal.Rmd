@@ -34,3 +34,5 @@ knitr::opts_chunk$set(echo = TRUE)
 -   January and April 15th are the quarterly report deadlines (Staci will send me examples, it isn't hard)
 
     -   Ask Sarah R. for remaining budget numbers with at least a week of leeway for her to get back to me
+
+![Sarah's notes during meeting](10.26.22_meeting.MP.jpg)
