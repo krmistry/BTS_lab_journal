@@ -233,10 +233,132 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #### Notes from Meeting with Staci & Sarah
 
--   refer to Amy's paper for eradiction threshold ideas (Staci sent it to me)
+-   Refer to Amy's paper for eradiction threshold ideas (Staci sent it to me)
 
 -   For growth rate, use a half normal distribution, with the highest growth level (the mean, I think?) at lowest density, and growth rate decreasing as density goes up
 
-```{r half-normal_example}
+    -   Ask Shane for info about intercept (growth rate when density = 0, so highest point)
 
+-   Reproductive rate could be modeled the same way as growth rate
+
+    -   Read Savidge 2007 for into
+
+-   Build the generating model and see what it does before contacting Shane
+
+    -   Outputs to generate:
+
+        -   Overall abundance (one thing we do have a pretty good idea about is the carrying capacity)
+
+        -   Size class distribution
+
+-   Make mortality constant within size classes (but different for each size class - mortality would likely be highest at smallest size class and decreases as size increases
+
+-   Start with just generating and removal, no estimation step (since it seems like a monitoring only step might be a hard sell with the managers in Guam at this point)
+
+    -   ADS only is the simplest option, so start with this
+
+-   Jess Diallo did a removal model that would be useful - talk to her
+
+-   Read recent Davis et al. paper - Staci sent me the info over slack
+
+#### Paper notes
+
+-   Savidge et al. 2007 - Reproductive Biology of BTS
+
+    -   Look up Rodda et al. 1999 for growth rates:
+
+        -   Reported here as 16.8 mm/month for males and 13.1 mm/month for females, assuming constant growth from hatching at 375 mm SVL; hopefully there is a growth by size class in that paper
+
+        -   Based on 36 wild snakes tracked from 8.8 to 16.6 months - so might be good to update
+
+    -   Size and age at sexual maturity:
+
+        -   Lots of variation for females; 840 mm to 1,110 mm SVL; 90% matured from 910 to 1,025 mm
+
+        -   Even more variation for males; 805 mm to 1,135 mm SVL; 90% matured from 940 to 1,030 mm
+
+        -   Assuming constant growth, median age for males is 3.1 years and 3.7 years for females
+
+    -   Mean egg clutch size (based on 14 snakes, only one of which had actual eggs): 4.3, sd = 2.2, range 2 - 9
+
+    -   Reproducing females captured in every month
+
+    -   Larger males had larger testes (presumably meaning more sperm, although males usually aren't the limiting factor for reproduction, so might not matter much)
+
+    -   Only 1 gravid female captured, out of 782; doesn't look like current capture methods will work for catching breeding females (they may go to ground and stay basically immobile for weeks before clutching, so not going to be attracted to bait or available for visual survey detection)
+
+    -   Sperm storage is possible; we're not sure if the males, females or both can store it
+
+    -   Parthenogenesis (asexual reproduction, in this case by females) is also potentially something BTS could do (there are multiple snake species that can)
+
+    -   No data available on frequency of reproduction
+
+        -   2 closely related species can produce multiple clutches in a year, so it would be conservative to assume that BTS can too
+
+    -   No fecundity based on size info; seems reasonable to assume that larger snakes could have bigger clutches; check Melia's paper, because this might have addressed that
+
+-   Rodda et al. 1999 - Overview of Biology of BTS
+
+    -   Seasonality of movement; with year divided into 4 quarters based on rainfall (low, rising, high, and falling), it showed greater movement during rising and high
+
+        -   Doesn't say which months these correspond to...
+
+            -   Based on graph: low = February - April, rising = May - July, high = August - October, falling = November to January
+
+    -   Traps can hold more than one snake - good to know
+
+        -   1 most frequently, 2 some of the time, 3 quite rarely and 4 extremely rarely (there was a graph with more specific info in the paper if I need to make it into probabilities; probably size dependent, I would assume)
+
+    -   Can consume meals as large as 70% of the snake's mass
+
+        -   Might be able to use this when setting an "effective" eradication threshold for a particular bird species
+
+        -   Monthly level of consumption at 40% of body weight (in captive snakes)
+
+    -   In other locations, BTS has bigger average clutch size than reported in the 14 BTS snakes; 4-12, 7 and 5.5 in various native range locations
+
+    -   Correlation between maternal size and number of eggs found in Australian BTS
+
+    -   Egg incubation is likely 75 - 90 days (fits nicely in my quarterly time step; snakes that lay eggs in one quarter will produce offspring in the next)
+
+    -   Less than 625 mm SVL are considered hatchlings (with a lower limit of 375)
+
+    -   Growth rate based on 36 snakes that were recaptured once, 8 - 16 months after the initial capture (small sample size, and only one period of growth; not much to go on)
+
+        -   In this small sample, growth rate appears to be the same across sizes, with more variation among males
+
+        -   The largest snake in this group was \~1,250 mm SVL and the smallest was \~575 mm, with majority between 800 and 1,100
+
+        -   One 1,000 mm SVL male had a negative growth rate
+
+        -   This growth rate could probably be used for small and medium size classes in my model, and i can extrapolate that growth will like be lower for the bigger size classes, and maybe more heavily density dependent
+
+### Ideas about removal-only population model
+
+-   Could number of removals and removal rate of the method be used to estimate population? This would require bodies though, so it wouldn't be possible to use it with ADS only
+
+    -   The thing that might be most useful to explore is how precise our estimate of method removal rate needs to be in order to use the number removed as an index of abundance with any level of certainty, and also how small the population can get before there will effectively be no catches, but it might still be persisting
+
+-   A key parameter to incorporate when thinking about how many 0s would need to occur to be relatively certain about eradication is how quickly the population can rebound from suppression - Amy had a paper about this at some point
+
+```{r removal_only_simplest}
+library(ggplot2)
+library(reshape2)
+
+N <- rnorm(10, 3000, 200)
+
+removed <- rnorm(10, 30, 15)
+
+estimated_rate <- 0.01
+
+estimated_N <- removed/estimated_rate
+
+years <- c(2010:2020)
+
+test <- as.data.frame(cbind(years, N, estimated_N))
+test_2 <- melt(test, id.vars = "years")
+colnames(test_2)[2:3] <- c("source", "individuals")
+
+ggplot(test_2, aes(x = years, y = individuals, fill = source)) +
+  geom_bar(position = "dodge", stat = "identity")
 ```
