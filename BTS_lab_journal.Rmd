@@ -305,7 +305,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
             -   Based on graph: low = February - April, rising = May - July, high = August - October, falling = November to January
 
-    -   Traps can hold more than one snake - good to know
+    -   Traps can hold more than one snake, based on data from 1992 study - good to know
 
         -   1 most frequently, 2 some of the time, 3 quite rarely and 4 extremely rarely (there was a graph with more specific info in the paper if I need to make it into probabilities; probably size dependent, I would assume)
 
@@ -362,3 +362,139 @@ colnames(test_2)[2:3] <- c("source", "individuals")
 ggplot(test_2, aes(x = years, y = individuals, fill = source)) +
   geom_bar(position = "dodge", stat = "identity")
 ```
+
+### 12/8/2022
+
+Currently working on the generating model, and the goal is to have a fully functioning generating model by the end of December, ready to send to Shane (and possibly Amy?) for review and gut check regarding if the population dynamics look good relative to his/their knowledge. There are two tasks that I need to accomplish in order to do this - figuring out how the vital rates will be density dependent, and figuring out what the peak or mean (whichever way I end up doing it) estimates are for the growth, reproductive and mortality rates for each size class.
+
+To do list to accomplish these tasks:
+
+-   Gather information for various vital rates from as many papers as I can find - collect that information here, ideally by the end of the day on Friday 12/9
+
+-   Put together proposed ways of doing density dependent vital rates -- send whatever I've come up with to Sarah and Staci for feedback by Monday, 12/12
+
+-   Set up script for generating model, using one of the proposed vital rate methods, so that is ready to go - also ideally by the end of the day on Friday 12/9
+
+#### Info on data sources for following studies that produced vital rate estimates:
+
+-   From Savidge et al. 2007 - Reproductive Biology of BTS:
+
+    -   782 snakes (455 males, 327 females) collected between 1982 and 1987 from numerous sites. 65% were live-captured by hand or trapped in non-urban locations. \<10% of the rest were from road kills.
+
+-   From Rodda et al. 1999 - Overview of Biology of BTS:
+
+    -   
+
+-   From Nafus et al. 2021 - Demographic response of BTS to extended population suppression:
+
+    -   Snakes were collected in 5 hectares from October 2016 - March 2020, in a closed area (no immigration or emigration)
+
+    -   117 individuals captured (23 snakes/ha) from October 2016 - March 2017, before toxic bait application; and they were fairly confident that they had captured and marked all adult snakes available at the time. Eight snakes were killed (or were presumed dead because they weren't recaptured, and no unmarked large snakes were found in 3 years) before the first toxic bait application, so the beginning population was considered to be 109 (65 females and 44 males)
+
+        -   After the first toxic bait application in March 2017, an additional 81 juveniles snakes were detected, so the total population was considered to be 190 individuals
+
+    -   Data is available online
+
+#### Growth rate information from all sources
+
+-   From Rodda et al. 1999 - Overview of Biology of BTS:
+
+    -   Growth rate based on 36 snakes that were recaptured once, 8 - 16 months after the initial capture (small sample size, and only one period of growth; not much to go on)
+
+        -   In this small sample, growth rate appears to be the same across sizes, with more variation among males
+
+        -   The largest snake in this group was \~1,250 mm SVL and the smallest was \~575 mm, with majority between 800 and 1,100
+
+        -   One 1,000 mm SVL male had a negative growth rate
+
+        -   This growth rate could probably be used for small and medium size classes in my model, and i can extrapolate that growth will like be lower for the bigger size classes, and maybe more heavily density dependent
+
+-   From Savidge et al. 2007 - Reproductive Biology of BTS
+
+    -   Look up Rodda et al. 1999 for growth rates:
+
+        -   Reported here as 16.8 mm/month for males and 13.1 mm/month for females, assuming constant growth from hatching at 375 mm SVL; hopefully there is a growth by size class in that paper
+
+-   From Nafus et al. 2021 - Demographic response of BTS to extended population suppression:
+
+    -   ![](Nafus_2022_Table_2.png)
+
+#### Reproductive rate information from all sources
+
+-   From Savidge et al. 2007 - Reproductive Biology of BTS:
+
+    -   Size and age at sexual maturity:
+
+        -   Lots of variation for females; 840 mm to 1,110 mm SVL; 90% matured from 910 to 1,025 mm
+
+        -   Even more variation for males; 805 mm to 1,135 mm SVL; 90% matured from 940 to 1,030 mm
+
+    -   Mean egg clutch size (based on 14 snakes, only one of which had actual eggs): 4.3, sd = 2.2, range 2 - 9
+
+    -   Reproducing females captured in every month
+
+    -   Only 1 gravid female captured, out of 782; doesn't look like current capture methods will work for catching breeding females (they may go to ground and stay basically immobile for weeks before clutching, so not going to be attracted to bait or available for visual survey detection)
+
+        -   This means that at least this portion of the population might be unavailable to be either captured or would eat the ADS bait at any given time - this means that successive baiting drops or efforts would need to be spaced apart such that a female who became unavailable the day before the last event would be available at that point - so how long does it take for females to incubate eggs before laying them somewhere?
+
+    -   No fecundity based on size info; seems reasonable to assume that larger snakes could have bigger clutches
+
+-   From Rodda et al. 1999 - Overview of Biology of BTS:
+
+    -   In other locations, BTS has bigger average clutch size than reported in the 14 BTS snakes; 4-12, 7 and 5.5 in various native range locations
+
+    -   Correlation between maternal size and number of eggs found in Australian BTS
+
+    -   Egg incubation is likely 75 - 90 days (fits nicely in my quarterly time step; snakes that lay eggs in one quarter will produce offspring in the next)
+
+    -   In a 1974 paper, a captive gravid female from a related snake species (*B. blandingi*) left her normal arboreal perch and stayed on the bottom of her cage (without eating) for 6 to 8 weeks before oviposition (laying the eggs, I assume)
+
+-   From Nafus et al. 2021 - Demographic response of BTS to extended population suppression:
+
+    -   In this data set, the number of juveniles is less than the number of follicles detected in a female in almost all cases, and only female produced juveniles without follicles being detected
+
+    -   Most females only reproduced once, and for females that reproduced more than once, they only usually had one clutch per year
+
+    -   At the end of the study, an average of 11 follicles for each female juvenile observed, which suggests that 9% (1 out of 11) detected follicles resulted in a female snake
+
+#### Natural mortality rate information from all sources
+
+-   From Nafus et al. 2021 - Demographic response of BTS to extended population suppression:
+
+    -   They weren't trying to estimate natural mortality at all, but in the first 6 months of this study, while they were doing an initial inventory of the population, 8 out of 119 snakes may have died from natural causes (2 were definitely killed, one by a monitor lizard and one by a cat, and 6 disappeared and weren't detected again throughout the next 3 years - this doesn't guarantee that they died in that 6 month period though). This could be used to come up with a (very rough) estimate of natural mortality, although being hit by a car, which accounted for mortality in other studies, was not possible for this population, which would need to be considered.
+
+-   From Savidge et al. 2007 - Reproductive Biology of BTS:
+
+    -   782 snakes (455 males, 327 females) collected between 1982 and 1987, and \<10% were from road kills
+
+#### Size class information from all sources:
+
+-   From Rodda et al. 1999 - Overview of Biology of BTS:
+
+    -   Less than 625 mm SVL are considered hatchlings (with a lower limit of 375)
+
+-   From Goettz et al. 2021 - BTS Mortality after Aerial Toxic Bait Application:
+
+    -   For this model, partitioned their data into 2 size classes;
+
+        -   The smaller size class had a mean of 1,019 +/- 17 mm SVL (range 990 - 1,040, n = 15), characterized as snakes transitioning from juveniles to sexually matured adults
+
+        -   The larger size class had a mean 1,104 +/- 59 mm (range of 1,052 - 1,265 mm, n = 15), and these snakes were expected to be fully sexually mature
+
+-   From Nafus et al. 2021 - Demographic response of BTS to extended population suppression:
+
+    -   Size classes used in this study, in mm SVL:
+
+        -   \<700 - primarily eat ectotherms
+
+        -   700 - 850 - may have limited and unreliable interest in dead mouse baits
+
+        -   851 - 999 - considered willing to eat dead mouse baits
+
+        -   1,000 - 1,200
+
+        -   \>= 1,200
+
+    -   They also had an egg stage before these size classes, and assumed that snakes hatched at 320 - 410 mm SVL
+
+    -   Females less than 1,000 mm rarely produce follicles and in this study none of them yielded juveniles
