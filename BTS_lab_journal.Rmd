@@ -369,7 +369,7 @@ Currently working on the generating model, and the goal is to have a fully funct
 
 To do list to accomplish these tasks:
 
--   Gather information for various vital rates from as many papers as I can find - collect that information here, ideally by the end of the day on Friday 12/9
+-   Gather information for various vital rates from as many papers as I can find - collect that information here, ideally by the end of the day on Friday 12/9 - DONE
 
 -   Put together proposed ways of doing density dependent vital rates -- send whatever I've come up with to Sarah and Staci for feedback by Monday, 12/12
 
@@ -395,6 +395,18 @@ To do list to accomplish these tasks:
 
     -   Data is available online
 
+-   From Mathies et al. 2010 - Reproductive Biology of Male Brown Treesnakes (Boiga irregularis) on Guam:
+
+    -   86 male BTS were collected every month from May 2001 to April 2002
+
+    -   SVL varied from \~900 to \~1,750, with the majority between 900 and 1,300
+
+    -   Snakes might have been in a period of low reproduction at the time of collection due to lack of prey (over carrying capacity)
+
+-   From Kahl et al. 2012 - Brown treesnakes: a potential invasive species for the United States:
+
+    -   Literature review all available references on BTS, with more than 300 citations, 47% of which come from grey literature
+
 #### Growth rate information from all sources
 
 -   From Rodda et al. 1999 - Overview of Biology of BTS:
@@ -407,7 +419,7 @@ To do list to accomplish these tasks:
 
         -   One 1,000 mm SVL male had a negative growth rate
 
-        -   This growth rate could probably be used for small and medium size classes in my model, and i can extrapolate that growth will like be lower for the bigger size classes, and maybe more heavily density dependent
+        -   This growth rate could probably be used for small and medium size classes in my model, and i can extrapolate that growth will likely be lower for the bigger size classes, and maybe more heavily density dependent
 
 -   From Savidge et al. 2007 - Reproductive Biology of BTS
 
@@ -457,6 +469,26 @@ To do list to accomplish these tasks:
 
     -   At the end of the study, an average of 11 follicles for each female juvenile observed, which suggests that 9% (1 out of 11) detected follicles resulted in a female snake
 
+-   From Mathies et al. 2010 - Reproductive Biology of Male Brown Treesnakes (Boiga irregularis) on Guam:
+
+    -   Male reproduction is aseasonal (likely due to environmental conditions, same as for females)
+
+    -   There is a lot of individual variation in plasma testosterone levels, but its not related to body mass
+
+-   From Kahl et al. 2012 - Brown treesnakes: a potential invasive species for the United States:
+
+    -   Clutch size varies widely across native range (between 3 and 11), with an average of 5.5
+
+    -   Larger females lay large clutches
+
+    -   In Australia, incubation took from 76 to 90 days, depending on temperature
+
+    -   May be induced ovulators, with coitus being a precursor for ovulation
+
+    -   Gravid females have only made up 0.5% of snakes collected on Guam
+
+    -   Not enough data for a real estimate, but the few clutches found on Guam have had 3 or 4 eggs, with up to 8. Incubation periods on Guam have been longer, from 94 to 126 days
+
 #### Natural mortality rate information from all sources
 
 -   From Nafus et al. 2021 - Demographic response of BTS to extended population suppression:
@@ -498,3 +530,73 @@ To do list to accomplish these tasks:
     -   They also had an egg stage before these size classes, and assumed that snakes hatched at 320 - 410 mm SVL
 
     -   Females less than 1,000 mm rarely produce follicles and in this study none of them yielded juveniles
+
+-   From Kahl et al. 2012 - Brown treesnakes: a potential invasive species for the United States:
+
+    -   The smallest snakes are \<=350 mm SVL, and have umbilical scars that suggest they're recent hatchlings
+
+    -   Jordan and Rhodda 1994 classified snakes less than 750 mm as juveniles, 750 - 950 as sub-adults, and adults as \>=950
+
+        -   At larger size classes, there are more males than females (sub-adults and juveniles are 1:1)
+
+    -   Rural snakes rarely grow greater than 1,300 mm SVL
+
+    -   Larger snakes have been found in southern Guam (where there's a larger rodent population)
+
+    -   
+
+Putting this information together for my size categories (based on what Staci used, because then I can use the same detection probability info that she did)
+
+-   \< 850
+
+    -   No reproduction
+
+    -   Average growth is 16.8 mm/month for males and 13.1 mm/month for females, assuming constant growth from hatching at 375 mm SVL
+
+    -   Primarily eat ectotherms, with the larger individuals in the size class having limited and unreliable interest in mouse baits
+
+    -   Likely has the highest mortality, based on the fact that smaller snakes can probably be eaten by more things than larger snakes (monitor lizards, at least)
+
+-   \>= 850 and \< 950
+
+    -   Limited reproduction potential; only those in the upper side of this size class may be able to reproduce
+
+    -   Average growth is 16.8 mm/month for males and 13.1 mm/month for females, assuming constant growth from hatching at 375 mm SVL
+
+    -   Considered willing to eat dead mouse baits
+
+-   \>= 950 and \< 1,150
+
+    -   Most of those in this size class will be sexually mature and can potentially reproduce
+
+    -   Considered willing to eat dead mouse baits
+
+    -   No growth information
+
+**Density**
+
+-   From Kahl et al. 2012 - Brown treesnakes: a potential invasive species for the United States:
+
+    -   Peak densities occurred in the 1980s, with 50 - 100 per hectare
+
+    -   After the 1980s peak, density fell to 30 snakes/ha
+
+    -   Prey availability appears to be the only thing limiting BTS abundance
+
+#### 1/10/23
+
+-   Notes from meeting with Sarah:
+
+    -   The method I created to get a half-normal relationship between density and vital rates looks fine to Sarah (!!!!)
+
+    -   Sarah is going to send me the most recent quarterly report, which I can use to get the correct reporting and grant period dates, and to verify that the admin contact is the same
+
+        -   Sent Sarah and Staci the current draft of the quarterly report, awaiting feedback (Staci is at a conference this week, so probably won't get back to me until next week)
+
+        -   If Sarah hasn't sent me the previous quarterly report by the end of the week, email her a reminder
+
+    -   Clean up the R markdown with my methods up to this point and send it to Sarah for her review (via github would probably be best) - it would be good to do this before next Tuesday, 1/17, so she has a chance to look at it before our next meeting on 1/18
+
+    -   Sarah will email Mark again to ask about an extension for the funding - check in to see if she did that yet at our meeting next week on 1/18
+
+    -   Sarah wanted to know if I would be interested in working with her on a project (maybe 2 projects?) with WDFW, which is more project manager-focused and involves structured decision-making. I told her I would need to be making at least a bit more than I am in this position (70k+), and she said she'd look into it (she doesn't have any funding for it yet). Something to follow up on in a bit.
